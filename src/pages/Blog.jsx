@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 /* ─────────────────────────────────────────────────────────────
@@ -126,38 +124,56 @@ export default function Blog() {
           </div>
 
           {/* Cards grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map(post => (
-              <Card key={post.id} className="hover:shadow-md transition-shadow flex flex-col">
-                {/* [POST_THUMBNAIL] — uncomment and add src when images are available
-                <div className="aspect-video overflow-hidden rounded-t-xl bg-[#e8f6fb]">
-                  <img src={`/images/blog/${post.id}.jpg`} alt={post.title} className="w-full h-full object-cover" />
-                </div> */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((post, i) => (
+              <Link
+                key={post.id}
+                to={`/blog/${post.id}`}
+                className="group no-underline flex flex-col rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              >
+                {/* Colour banner — cycles through teal shades */}
+                <div className={`h-1.5 w-full ${
+                  i % 3 === 0 ? "bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4]" :
+                  i % 3 === 1 ? "bg-gradient-to-r from-[#38bcd4] to-[#0fa3c1]" :
+                                "bg-gradient-to-r from-[#0fa3c1] to-[#0c8aa4]"
+                }`} />
 
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="secondary">{post.tag}</Badge>
-                    <span className="text-xs text-[#4a6070]">{post.date}</span>
-                    <span className="text-xs text-[#4a6070] ml-auto">{post.readTime}</span>
+                <div className="flex flex-col flex-1 p-6">
+                  {/* Tag + read time */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#0c8aa4] bg-[#0c8aa4]/8 px-2.5 py-1 rounded-full">
+                      {post.tag}
+                    </span>
+                    <span className="text-xs text-[#4a6070] flex items-center gap-1">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      {post.readTime}
+                    </span>
                   </div>
-                  <h2 className="text-base font-bold leading-snug text-[#1a2e3b]">
-                    {/* [POST_LINK] — swap href for internal routing when article pages exist */}
-                    <Link
-                      to={`/blog/${post.id}`}
-                      className="hover:text-[#0c8aa4] transition-colors no-underline"
-                    >
-                      {post.title}
-                    </Link>
-                  </h2>
-                </CardHeader>
 
-                <CardContent className="pt-0 flex flex-col flex-1">
-                  <p className="text-sm text-[#4a6070] leading-relaxed mb-4 flex-1">{post.excerpt}</p>
-                  <Button variant="link" asChild className="p-0 h-auto text-[#0c8aa4] self-start">
-                    <Link to={`/blog/${post.id}`}>Read more →</Link>
-                  </Button>
-                </CardContent>
-              </Card>
+                  {/* Title */}
+                  <h2 className="text-[15px] font-bold leading-snug text-[#1a2e3b] mb-3 group-hover:text-[#0c8aa4] transition-colors">
+                    {post.title}
+                  </h2>
+
+                  {/* Excerpt */}
+                  <p className="text-sm text-[#4a6070] leading-relaxed flex-1 mb-5">
+                    {post.excerpt}
+                  </p>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <span className="text-xs text-[#4a6070]">{post.date}</span>
+                    <span className="text-xs font-semibold text-[#0c8aa4] flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Read more
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
 
