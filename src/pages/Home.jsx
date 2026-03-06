@@ -108,10 +108,11 @@ export default function Home() {
 
             {/* Copy */}
             <div className="flex-1 max-w-xl">
-              {/* [TAGLINE] — swap or remove */}
-              <p className="text-white/70 text-xs font-bold uppercase tracking-widest mb-3">
-                Sydney's Eastern Suburbs · Mobile Physiotherapy
-              </p>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-xs font-bold uppercase tracking-widest text-white/70">Sydney's Eastern Suburbs</span>
+                <span className="w-1 h-1 rounded-full bg-white/40 flex-shrink-0" />
+                <span className="text-xs font-bold uppercase tracking-widest text-white/70">Mobile Physiotherapy</span>
+              </div>
               <h1 className="text-white text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
                 Expert physio care,<br />delivered to your door.
               </h1>
@@ -119,12 +120,17 @@ export default function Home() {
                 Whether you're recovering from injury, managing pain, or preparing to return to sport — Soar Solutions brings professional physiotherapy to you, 7 days a week.
               </p>
 
-              {/* Trust badges */}
-              <div className="flex flex-wrap gap-2 mb-8">
+              {/* Trust signals — checklist style */}
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 mb-8 mt-8">
                 {TRUST_BADGES.map(b => (
-                  <span key={b} className="text-xs font-semibold text-white/90 bg-white/15 border border-white/25 rounded-full px-3 py-1">
-                    {b}
-                  </span>
+                  <div key={b} className="flex items-center gap-2">
+                    <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="2 6 5 9 10 3"/>
+                      </svg>
+                    </span>
+                    <span className="text-sm text-white/90 font-medium">{b}</span>
+                  </div>
                 ))}
               </div>
 
@@ -263,23 +269,42 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {TESTIMONIALS.map(t => (
-              <Card key={t.name} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <p className="text-amber-400 text-sm mb-3">★★★★★</p>
-                  <p className="text-[#4a6070] text-sm italic leading-relaxed mb-5">"{t.quote}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0c8aa4] to-[#38bcd4] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">
-                      {t.initials}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-[#1a2e3b]">{t.name}</p>
+              <div key={t.name} className="relative flex flex-col bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
+                {/* Quote mark */}
+                <span className="absolute top-5 right-6 text-5xl leading-none text-[#0c8aa4]/10 font-serif select-none">"</span>
+
+                {/* Stars */}
+                <div className="flex gap-0.5 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b" stroke="none">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p className="text-[#1a2e3b] text-sm leading-relaxed flex-1 mb-6">
+                  "{t.quote}"
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0c8aa4] to-[#38bcd4] text-white text-xs font-bold flex items-center justify-center flex-shrink-0 shadow-sm">
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#1a2e3b]">{t.name}</p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" className="text-[#4a6070]">
+                        <path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27 3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10 5.35 0 9.25-3.67 9.25-9.09 0-1.15-.15-1.81-.15-1.81z" fill="#4285F4"/>
+                      </svg>
                       <p className="text-xs text-[#4a6070]">Google Review · {t.ago}</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
 

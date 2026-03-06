@@ -62,9 +62,12 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <Button asChild size="sm" className="ml-4">
-            <Link to="/booking">Book now</Link>
-          </Button>
+          <Link
+            to="/booking"
+            className="ml-4 px-4 py-2 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white text-sm font-semibold hover:opacity-90 transition-opacity no-underline shadow-sm"
+          >
+            Book now
+          </Link>
         </nav>
 
         {/* Mobile hamburger */}
@@ -98,9 +101,13 @@ export default function Navbar() {
               {label}
             </NavLink>
           ))}
-          <Button asChild size="sm" className="mt-2 w-full">
-            <Link to="/booking" onClick={close}>Book now</Link>
-          </Button>
+          <Link
+            to="/booking"
+            onClick={close}
+            className="mt-2 text-center px-4 py-2.5 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white text-sm font-semibold hover:opacity-90 transition-opacity no-underline shadow-sm"
+          >
+            Book now
+          </Link>
         </nav>
       </div>
     </header>
