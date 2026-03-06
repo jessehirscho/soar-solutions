@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { supabase } from "@/lib/supabase";
 
 /* ─────────────────────────────────────────────────────────────────
    BOOKING PAGE — multi-step form
@@ -325,9 +326,20 @@ export default function Booking() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("submitting");
-    // Supabase insert will be added in the next feature
-    await new Promise(r => setTimeout(r, 800)); // placeholder
-    setStatus("success");
+
+    const { error } = await supabase.from("bookings").insert({
+      name:           data.name,
+      email:          data.email,
+      phone:          data.phone     || null,
+      suburb:         data.suburb    || null,
+      service:        data.service   || null,
+      preferred_date: data.date      || null,
+      preferred_time: data.timeSlot  || null,
+      details:        data.details   || null,
+      referral:       data.referral  || null,
+    });
+
+    setStatus(error ? "error" : "success");
   }
 
   const progress = ((step) / (STEPS.length - 1)) * 100;
