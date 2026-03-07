@@ -135,26 +135,23 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button asChild size="lg" className="bg-white text-[#0c8aa4] hover:bg-white/90 font-bold shadow-lg">
-                  <Link to="/booking">Request an appointment →</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10 hover:text-white bg-transparent">
-                  <a href="tel:[PHONE_NUMBER]">Call us now</a>
-                </Button>
+                <Link to="/booking" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
+                  Request an appointment →
+                </Link>
+                <a href="tel:0410676862" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Call us now
+                </a>
               </div>
             </div>
 
-            {/* Hero image — [HERO_IMAGE] */}
+            {/* Hero image */}
             <div className="flex-shrink-0 w-full max-w-sm lg:max-w-md">
-              <div className="aspect-[4/3] rounded-2xl bg-white/10 border border-white/20 overflow-hidden flex items-center justify-center">
-                {/* Replace <div> with <img src="[HERO_IMAGE_PATH]" alt="..." className="w-full h-full object-cover" /> */}
-                <div className="text-center text-white/50 text-sm px-8">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto mb-2 opacity-50">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                  </svg>
-                  [HERO_IMAGE]
-                </div>
-              </div>
+              <img
+                src="/images/seth-assessment.jpg"
+                alt="Seth Hirschowitz — physiotherapy treatment"
+                className="w-full rounded-2xl shadow-2xl object-cover"
+              />
             </div>
           </div>
         </div>
@@ -185,10 +182,16 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="text-center mt-10">
-            <Button asChild size="lg">
-              <Link to="/booking">Book a session →</Link>
-            </Button>
+          <div className="text-center mt-12">
+            <Link
+              to="/booking"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white font-bold text-base hover:opacity-90 hover:shadow-lg transition-all no-underline shadow-md"
+            >
+              Book a session
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
           </div>
         </div>
       </section>
@@ -200,15 +203,11 @@ export default function Home() {
 
             {/* Image — [PRACTITIONER_PHOTO] */}
             <div className="order-2 lg:order-1">
-              <div className="aspect-[4/5] rounded-2xl bg-gradient-to-br from-[#cde9f0] to-[#e8f6fb] flex items-center justify-center overflow-hidden">
-                {/* Replace with: <img src="[PRACTITIONER_PHOTO_PATH]" alt="[PRACTITIONER_NAME]" className="w-full h-full object-cover" /> */}
-                <div className="text-center text-[#0c8aa4]/40 text-sm px-8">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto mb-2">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                  </svg>
-                  [PRACTITIONER_PHOTO]
-                </div>
-              </div>
+              <img
+                src="/images/portrait.png"
+                alt="Seth Hirschowitz — Principal Physiotherapist"
+                className="w-full rounded-2xl shadow-lg object-cover"
+              />
             </div>
 
             {/* Copy */}
@@ -244,12 +243,21 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <Button asChild>
-                  <Link to="/booking">Book an appointment</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <a href="tel:[PHONE_NUMBER]">Call us</a>
-                </Button>
+                <Link
+                  to="/booking"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white text-sm font-semibold hover:opacity-90 transition-opacity no-underline shadow-md"
+                >
+                  Book an appointment →
+                </Link>
+                <a
+                  href="tel:0410676862"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-[#0c8aa4] text-[#0c8aa4] text-sm font-semibold hover:bg-[#0c8aa4]/5 transition-colors no-underline"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                  0410 676 862
+                </a>
               </div>
             </div>
           </div>
@@ -308,17 +316,106 @@ export default function Home() {
             ))}
           </div>
 
+        </div>
+      </section>
+
+      {/* ─── 5. SERVICE AREA MAP ──────────────────────────────────────────── */}
+      <section className="section bg-[#f0f6f9]">
+        <div className="container">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#0c8aa4] mb-2">Where we work</p>
+            <h2 className="text-3xl font-extrabold text-[#1a2e3b] mb-3">Our Service Area</h2>
+            <p className="text-[#4a6070] max-w-lg mx-auto">
+              We provide mobile home visits across Sydney's Eastern Suburbs, and clinic appointments at OptiSports Barangaroo in the CBD.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Mobile service map */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0c8aa4] to-[#38bcd4] text-white flex items-center justify-center flex-shrink-0">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#1a2e3b] text-sm">Mobile Home Visits</h3>
+                    <p className="text-xs text-[#4a6070]">Vaucluse · Bondi · Paddington · CBD · Barangaroo</p>
+                  </div>
+                </div>
+              </div>
+              <div className="h-56 w-full">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85143.66765828362!2d151.16731213274267!3d-33.912357981621724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12b18db5d79889%3A0xa061091923af585a!2sEastern%20Suburbs%2C%20NSW!5e0!3m2!1sen!2sau!4v1758167136079!5m2!1sen!2sau"
+                  title="Eastern Suburbs service area"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full border-0"
+                />
+              </div>
+              <div className="px-6 py-4">
+                <Link
+                  to="/booking"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0c8aa4] hover:opacity-75 transition-opacity no-underline"
+                >
+                  Book a home visit →
+                </Link>
+              </div>
+            </div>
+
+            {/* Clinic map */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+              <div className="px-6 pt-6 pb-4">
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0c8aa4] to-[#38bcd4] text-white flex items-center justify-center flex-shrink-0">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[#1a2e3b] text-sm">OptiSports Barangaroo</h3>
+                    <p className="text-xs text-[#4a6070]">Level 3, Suite 320 / 5 Lime St, Barangaroo NSW</p>
+                  </div>
+                </div>
+              </div>
+              <div className="h-56 w-full">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3312.9095548959167!2d151.1989898760984!3d-33.86622171892602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12afd3bafe0c03%3A0xcd908be399fb4efc!2sOptisports%20Physiotherapy%20Barangaroo!5e0!3m2!1sen!2sau!4v1758547210614!5m2!1sen!2sau"
+                  title="OptiSports Barangaroo clinic"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="w-full h-full border-0"
+                />
+              </div>
+              <div className="px-6 py-4">
+                <a
+                  href="https://book.nookal.com/bookings/book/e4a0299c-661f-4Af1-2671-4C40965c4DEf/location/GCMJF"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0c8aa4] hover:opacity-75 transition-opacity no-underline"
+                >
+                  Book at OptiSports →
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* CTA strip */}
           <div className="mt-12 rounded-2xl bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] p-8 text-center text-white">
             <h3 className="text-2xl font-extrabold mb-2">Ready to feel better?</h3>
             <p className="text-white/80 mb-6">No referral needed. Same-week appointments available across Sydney's Eastern Suburbs.</p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Button asChild size="lg" className="bg-white text-[#0c8aa4] hover:bg-white/90 font-bold">
-                <Link to="/booking">Request appointment →</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10 hover:text-white bg-transparent">
-                <a href="tel:[PHONE_NUMBER]">Call us now</a>
-              </Button>
+              <Link to="/booking" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
+                Request appointment →
+              </Link>
+              <a href="tel:0410676862" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Call us now
+              </a>
             </div>
           </div>
         </div>

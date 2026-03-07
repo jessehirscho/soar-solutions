@@ -9,13 +9,12 @@ export default function Footer() {
 
         {/* Brand */}
         <div>
-          <p className="font-extrabold text-white text-base mb-1">Soar Solutions Physiotherapy</p>
+          <img src="/images/logo-white.png" alt="Soar Solutions Physiotherapy" className="h-12 w-auto mb-4" />
           <p className="text-white/60 text-sm leading-relaxed mb-4">
             Expert mobile physiotherapy across Sydney's Eastern Suburbs.<br />No referral required.
           </p>
-          <a href="tel:[PHONE_NUMBER]" className="text-[#38bcd4] font-bold text-lg hover:opacity-80 transition-opacity no-underline">
-            {/* [PHONE_NUMBER] */}
-            0410 000 000
+          <a href="tel:0410676862" className="text-[#38bcd4] font-bold text-lg hover:opacity-80 transition-opacity no-underline">
+            0410 676 862
           </a>
           <p className="text-white/50 text-xs mt-1">Available 7am – 7pm, 7 days</p>
         </div>

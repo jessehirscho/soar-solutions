@@ -122,7 +122,7 @@ function StepContact({ data, onChange, errors }) {
             onChange={e => onChange("phone", e.target.value)}
             type="tel"
             inputMode="tel"
-            placeholder="0410 000 000"
+            placeholder="0410 676 862"
             autoComplete="tel"
             aria-invalid={!!errors.phone}
           />
@@ -370,9 +370,10 @@ export default function Booking() {
                 <div className="bg-[#f0f9fc] rounded-xl p-4 text-sm text-[#4a6070] max-w-sm">
                   Keep an eye on <strong>{data.email}</strong> — we'll be in touch soon.
                 </div>
-                <Button variant="outline" asChild>
-                  <a href="tel:[PHONE_NUMBER]">Or call us on 0410 000 000</a>
-                </Button>
+                <a href="tel:0410676862" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-[#0c8aa4] text-[#0c8aa4] font-semibold text-sm hover:bg-[#0c8aa4]/5 transition-colors no-underline">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Or call us on 0410 676 862
+                </a>
               </CardContent>
             </Card>
           ) : (
@@ -398,26 +399,26 @@ export default function Booking() {
                   {/* Error banner */}
                   {status === "error" && (
                     <p className="mt-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2" role="alert">
-                      Something went wrong. Please try again or call <a href="tel:[PHONE_NUMBER]" className="underline">0410 000 000</a>.
+                      Something went wrong. Please try again or call <a href="tel:0410676862" className="underline">0410 676 862</a>.
                     </p>
                   )}
 
                   {/* Navigation */}
                   <div className="flex items-center justify-between mt-8 pt-5 border-t border-gray-100">
                     {step > 0 ? (
-                      <Button type="button" variant="ghost" onClick={handleBack} className="text-[#4a6070]">
+                      <button type="button" onClick={handleBack} className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 border-gray-200 text-[#4a6070] font-semibold text-sm hover:border-[#0c8aa4] hover:text-[#0c8aa4] transition-colors">
                         ← Back
-                      </Button>
+                      </button>
                     ) : <div />}
 
                     {step < STEPS.length - 1 ? (
-                      <Button type="button" onClick={handleNext} size="lg">
+                      <button type="button" onClick={handleNext} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white font-bold text-sm hover:opacity-90 hover:shadow-md transition-all shadow-sm">
                         Continue →
-                      </Button>
+                      </button>
                     ) : (
-                      <Button type="submit" size="lg" disabled={status === "submitting"}>
+                      <button type="submit" disabled={status === "submitting"} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white font-bold text-sm hover:opacity-90 hover:shadow-md transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
                         {status === "submitting" ? "Submitting…" : "Submit booking →"}
-                      </Button>
+                      </button>
                     )}
                   </div>
                 </form>

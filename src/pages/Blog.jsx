@@ -185,9 +185,9 @@ export default function Blog() {
           <div className="mt-14 bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] rounded-2xl p-8 text-center text-white">
             <h3 className="text-xl font-extrabold mb-2">Have a question?</h3>
             <p className="text-white/80 text-sm mb-5">Our physiotherapist is happy to answer any questions about your injury or condition.</p>
-            <Button asChild className="bg-white text-[#0c8aa4] hover:bg-white/90 font-bold">
-              <Link to="/booking">Get in touch →</Link>
-            </Button>
+            <Link to="/booking" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
+              Get in touch →
+            </Link>
           </div>
         </div>
       </section>
