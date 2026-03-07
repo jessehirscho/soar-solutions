@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,21 +13,265 @@ import { supabase } from "@/lib/supabase";
    Steps: 1 Contact  2 Appointment  3 Condition  4 Review
    ───────────────────────────────────────────────────────────────── */
 
+// ── Suburbs within ~20 km of Dover Heights ──────────────────────
+const SUBURBS = [
+  // Eastern Suburbs
+  "Dover Heights","Vaucluse","Watsons Bay","Rose Bay","North Bondi","Bondi","Bondi Beach",
+  "Bondi Junction","Tamarama","Bronte","Bellevue Hill","Waverley","Clovelly","Randwick",
+  "Coogee","Maroubra","Kingsford","Pagewood","Little Bay","Matraville","Eastgardens","South Coogee",
+  // Inner East / Harbour
+  "Double Bay","Edgecliff","Point Piper","Darling Point","Rushcutters Bay","Woollahra",
+  "Paddington","Potts Point","Elizabeth Bay",
+  // CBD & Inner City
+  "Sydney","Surry Hills","Darlinghurst","Redfern","Chippendale","Ultimo","Pyrmont","Haymarket",
+  // Inner West
+  "Annandale","Camperdown","Newtown","Enmore","Marrickville","Dulwich Hill","Petersham",
+  "Lewisham","Summer Hill","Ashfield","Leichhardt","Haberfield","Lilyfield","Rozelle",
+  "Balmain","Birchgrove",
+  // Southern / Airport
+  "Mascot","Botany","Banksmeadow","Alexandria","Waterloo","Zetland","Rosebery",
+  "Eastlakes","Kensington",
+  // Lower North Shore
+  "North Sydney","Neutral Bay","Cremorne","Mosman","Kirribilli","McMahons Point",
+  "Crows Nest","Wollstonecraft","Waverton",
+  // Northern Beaches (south)
+  "Manly","Fairlight","Balgowlah","Balgowlah Heights","Seaforth",
+  // Other within ~20 km
+  "Hunters Hill","Drummoyne","Gladesville","Ryde","Strathfield","Concord",
+  "Homebush","Sydney Olympic Park",
+].sort().concat(["Other"]);
+
+// ── Suburb autocomplete combobox ─────────────────────────────────
+function SuburbCombobox({ value, onChange }) {
+  const [query, setQuery]       = useState(value || "");
+  const [open, setOpen]         = useState(false);
+  const [focused, setFocused]   = useState(-1);
+  const containerRef            = useRef(null);
+  const listRef                 = useRef(null);
+
+  const matches = query.length > 0
+    ? SUBURBS.filter(s => s !== "Other" && s.toLowerCase().startsWith(query.toLowerCase())).slice(0, 7)
+    : [];
+  const filtered = matches.length > 0 ? [...matches, "Other"] : query.length > 0 ? ["Other"] : [];
+
+  // Close on outside click
+  useEffect(() => {
+    function handler(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  function select(suburb) {
+    setQuery(suburb);
+    onChange(suburb);
+    setOpen(false);
+    setFocused(-1);
+  }
+
+  function handleKeyDown(e) {
+    if (!open || filtered.length === 0) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); setFocused(f => Math.min(f + 1, filtered.length - 1)); }
+    if (e.key === "ArrowUp")   { e.preventDefault(); setFocused(f => Math.max(f - 1, 0)); }
+    if (e.key === "Enter" && focused >= 0) { e.preventDefault(); select(filtered[focused]); }
+    if (e.key === "Escape") setOpen(false);
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      <div className="relative">
+        <Input
+          value={query}
+          onChange={e => { setQuery(e.target.value); onChange(e.target.value); setOpen(true); setFocused(-1); }}
+          onFocus={() => { if (query.length > 0) setOpen(true); }}
+          onKeyDown={handleKeyDown}
+          placeholder="Start typing your suburb…"
+          autoComplete="off"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => { setQuery(""); onChange(""); setOpen(false); }}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        )}
+      </div>
+
+      {open && filtered.length > 0 && (
+        <ul
+          ref={listRef}
+          className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-56 overflow-y-auto"
+        >
+          {filtered.map((suburb, i) => (
+            <li
+              key={suburb}
+              onMouseDown={() => select(suburb)}
+              className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                suburb === "Other"
+                  ? `border-t border-gray-100 italic ${i === focused ? "bg-[#0c8aa4] text-white" : "text-[#4a6070] hover:bg-[#f0f9fc]"}`
+                  : i === focused ? "bg-[#0c8aa4] text-white" : "text-[#1a2e3b] hover:bg-[#f0f9fc]"
+              }`}
+            >
+              {suburb === "Other" ? "Other (not listed)" : suburb}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 const SERVICES = [
-  "Sports injury rehab",
-  "Back / neck pain",
-  "Post-op rehabilitation",
-  "Work injury",
-  "Aged care rehab",
-  "Running assessment",
-  "General physiotherapy",
-  "Other",
+  {
+    id: "initial-assessment",
+    name: "Initial Assessment",
+    price: "$180",
+    duration: "60 mins",
+    description: "A full head-to-toe assessment of your injury or condition. Includes movement screening, diagnosis, and a personalised treatment plan.",
+  },
+  {
+    id: "follow-up",
+    name: "Follow-up Consultation",
+    price: "$140",
+    duration: "45 mins",
+    description: "Hands-on treatment and exercise progression for existing patients. Includes manual therapy, load management review, and home program update.",
+  },
+  {
+    id: "sports-injury",
+    name: "Sports Injury Rehab",
+    price: "$140",
+    duration: "45 mins",
+    description: "Targeted rehab for acute and chronic sports injuries — muscle strains, ligament sprains, stress fractures, and return-to-sport planning.",
+  },
+  {
+    id: "back-neck",
+    name: "Back & Neck Pain",
+    price: "$140",
+    duration: "45 mins",
+    description: "Assessment and treatment of spinal pain, disc issues, postural problems, and nerve-related pain such as sciatica or cervicogenic headaches.",
+  },
+  {
+    id: "post-op",
+    name: "Post-op Rehabilitation",
+    price: "$140",
+    duration: "45 mins",
+    description: "Structured recovery following surgery — ACL reconstruction, joint replacement, rotator cuff repair, and more. Progressive milestones from week 1.",
+  },
+  {
+    id: "running-assessment",
+    name: "Running Assessment",
+    price: "$200",
+    duration: "60 mins",
+    description: "Video gait analysis, strength and mobility screening, and a personalised training plan to improve economy and reduce injury risk.",
+  },
+  {
+    id: "aged-care",
+    name: "Aged Care Rehab",
+    price: "$140",
+    duration: "45 mins",
+    description: "Falls prevention, balance training, mobility and strength work for older adults — delivered at home at a comfortable pace.",
+  },
+  {
+    id: "work-injury",
+    name: "Work Injury",
+    price: "$140",
+    duration: "45 mins",
+    description: "Assessment and treatment for workplace injuries. We liaise with WorkCover, return-to-work coordinators, and employers as needed.",
+  },
+  {
+    id: "general",
+    name: "General Physiotherapy",
+    price: "$140",
+    duration: "45 mins",
+    description: "Not sure which service fits? Book a general appointment and we'll tailor the session to your needs.",
+  },
 ];
 
-const TIME_SLOTS = [
-  { label: "Morning",   sub: "7am – 12pm",  value: "morning"   },
-  { label: "Afternoon", sub: "12pm – 5pm",  value: "afternoon" },
-  { label: "Evening",   sub: "5pm – 7pm",   value: "evening"   },
+// ── Service picker ────────────────────────────────────────────────
+function ServicePicker({ value, onChange, error }) {
+  const [expanded, setExpanded] = useState(null);
+
+  return (
+    <div className={`rounded-xl border overflow-hidden ${error ? "border-red-400" : "border-gray-200"}`}>
+      {SERVICES.map((svc, i) => {
+        const selected = value === svc.id;
+        const open     = expanded === svc.id;
+        return (
+          <div key={svc.id} className={`${i > 0 ? "border-t border-gray-100" : ""}`}>
+            <div className={`flex items-center gap-3 px-4 py-3.5 transition-colors ${selected ? "bg-[#f0f9fc]" : "bg-white hover:bg-gray-50"}`}>
+              {/* Name */}
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-semibold leading-snug ${selected ? "text-[#0c8aa4]" : "text-[#1a2e3b]"}`}>
+                  {svc.name}
+                </p>
+              </div>
+
+              {/* Meta */}
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-sm font-bold text-[#1a2e3b] tabular-nums">{svc.price}</span>
+                <span className="text-xs text-[#4a6070] bg-gray-100 px-2 py-0.5 rounded-full whitespace-nowrap">{svc.duration}</span>
+
+                {/* More info toggle */}
+                <button
+                  type="button"
+                  onClick={() => setExpanded(open ? null : svc.id)}
+                  className="text-xs text-[#4a6070] hover:text-[#0c8aa4] flex items-center gap-0.5 transition-colors whitespace-nowrap"
+                >
+                  Info
+                  <svg
+                    width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                    strokeLinecap="round" strokeLinejoin="round"
+                    className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+                  >
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                </button>
+
+                {/* Select button */}
+                <button
+                  type="button"
+                  onClick={() => onChange("service", selected ? "" : svc.id)}
+                  className={`flex items-center gap-1 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    selected
+                      ? "bg-[#0c8aa4] text-white shadow-sm"
+                      : "bg-[#0c8aa4]/10 text-[#0c8aa4] hover:bg-[#0c8aa4] hover:text-white"
+                  }`}
+                >
+                  {selected ? "✓ Selected" : "Select"}
+                  {!selected && (
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Expandable description */}
+            {open && (
+              <div className="px-4 pb-3.5 pt-0 bg-[#f8fcfd] border-t border-[#e0f2f7]">
+                <p className="text-xs text-[#4a6070] leading-relaxed">{svc.description}</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+const TIME_PERIODS = [
+  { value: "morning",   label: "Morning",   sub: "7am – 12pm",
+    slots: ["7:00am","7:30am","8:00am","8:30am","9:00am","9:30am","10:00am","10:30am","11:00am","11:30am"] },
+  { value: "afternoon", label: "Afternoon", sub: "12pm – 5pm",
+    slots: ["12:00pm","12:30pm","1:00pm","1:30pm","2:00pm","2:30pm","3:00pm","3:30pm","4:00pm","4:30pm"] },
+  { value: "evening",   label: "Evening",   sub: "5pm – 7pm",
+    slots: ["5:00pm","5:30pm","6:00pm","6:30pm"] },
 ];
 
 const STEPS = ["Contact", "Appointment", "Condition", "Review"];
@@ -41,13 +285,16 @@ function validateStep(step, data) {
     if (!data.email.trim()) errors.email = "Email is required.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))
       errors.email = "Please enter a valid email.";
-    if (data.phone && !/^[\d\s\+\-\(\)]{6,}$/.test(data.phone))
+    if (!data.phone.trim()) errors.phone = "Phone number is required.";
+    else if (!/^[\d\s\+\-\(\)]{6,}$/.test(data.phone))
       errors.phone = "Please enter a valid phone number.";
+    if (!data.suburb.trim()) errors.suburb = "Suburb is required.";
   }
 
   if (step === 1) {
-    if (!data.service)  errors.service  = "Please select a service.";
-    if (!data.timeSlot) errors.timeSlot = "Please choose a preferred time.";
+    if (!data.service)       errors.service       = "Please select a service.";
+    if (!data.timeSlot)      errors.timeSlot      = "Please choose a time of day.";
+    else if (!data.preferredTime) errors.preferredTime = "Please choose a specific time slot.";
   }
 
   return errors;
@@ -116,7 +363,7 @@ function StepContact({ data, onChange, errors }) {
             aria-invalid={!!errors.name}
           />
         </Field>
-        <Field label="Phone" error={errors.phone}>
+        <Field label="Phone" required error={errors.phone}>
           <Input
             value={data.phone}
             onChange={e => onChange("phone", e.target.value)}
@@ -140,12 +387,8 @@ function StepContact({ data, onChange, errors }) {
         />
       </Field>
 
-      <Field label="Suburb">
-        <Input
-          value={data.suburb}
-          onChange={e => onChange("suburb", e.target.value)}
-          placeholder="e.g. Bondi, Coogee"
-        />
+      <Field label="Suburb" required error={errors.suburb}>
+        <SuburbCombobox value={data.suburb} onChange={v => onChange("suburb", v)} />
       </Field>
     </div>
   );
@@ -160,15 +403,8 @@ function StepAppointment({ data, onChange, errors }) {
         <p className="text-sm text-[#4a6070] mt-1">Pick your preferred service, date, and time.</p>
       </div>
 
-      <Field label="Service" required error={errors.service}>
-        <Select value={data.service} onValueChange={v => onChange("service", v)}>
-          <SelectTrigger aria-invalid={!!errors.service}>
-            <SelectValue placeholder="Select a service…" />
-          </SelectTrigger>
-          <SelectContent>
-            {SERVICES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-          </SelectContent>
-        </Select>
+      <Field label="Select a service" required error={errors.service}>
+        <ServicePicker value={data.service} onChange={onChange} error={errors.service} />
       </Field>
 
       <Field label="Preferred date">
@@ -180,28 +416,53 @@ function StepAppointment({ data, onChange, errors }) {
         />
       </Field>
 
+      {/* Step 1 of time: pick period */}
       <Field label="Preferred time of day" required error={errors.timeSlot}>
         <div className="grid grid-cols-3 gap-3">
-          {TIME_SLOTS.map(slot => (
+          {TIME_PERIODS.map(period => (
             <button
-              key={slot.value}
+              key={period.value}
               type="button"
-              onClick={() => onChange("timeSlot", data.timeSlot === slot.value ? "" : slot.value)}
-              aria-pressed={data.timeSlot === slot.value}
+              onClick={() => { onChange("timeSlot", period.value); onChange("preferredTime", ""); }}
+              aria-pressed={data.timeSlot === period.value}
               className={`flex flex-col items-center gap-1 py-4 px-2 rounded-xl border-2 text-sm font-semibold transition-all cursor-pointer select-none ${
-                data.timeSlot === slot.value
+                data.timeSlot === period.value
                   ? "border-[#0c8aa4] bg-[#0c8aa4]/10 text-[#0c8aa4]"
                   : "border-gray-200 bg-gray-50 text-[#1a2e3b] hover:border-[#0c8aa4]/40"
               }`}
             >
-              <span>{slot.label}</span>
-              <span className={`text-xs font-normal ${data.timeSlot === slot.value ? "text-[#0c8aa4]" : "text-gray-400"}`}>
-                {slot.sub}
+              <span>{period.label}</span>
+              <span className={`text-xs font-normal ${data.timeSlot === period.value ? "text-[#0c8aa4]" : "text-gray-400"}`}>
+                {period.sub}
               </span>
             </button>
           ))}
         </div>
       </Field>
+
+      {/* Step 2 of time: pick specific 30-min slot */}
+      {data.timeSlot && (
+        <Field label="Preferred start time" required error={errors.preferredTime}>
+          <div className="grid grid-cols-4 gap-2">
+            {TIME_PERIODS.find(p => p.value === data.timeSlot)?.slots.map(slot => (
+              <button
+                key={slot}
+                type="button"
+                onClick={() => onChange("preferredTime", data.preferredTime === slot ? "" : slot)}
+                aria-pressed={data.preferredTime === slot}
+                className={`py-2.5 px-2 rounded-lg border-2 text-xs font-semibold transition-all cursor-pointer select-none text-center ${
+                  data.preferredTime === slot
+                    ? "border-[#0c8aa4] bg-[#0c8aa4] text-white shadow-sm"
+                    : "border-gray-200 bg-white text-[#1a2e3b] hover:border-[#0c8aa4]/50"
+                }`}
+              >
+                {slot}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-[#4a6070] mt-1">We'll do our best to accommodate your preference.</p>
+        </Field>
+      )}
     </div>
   );
 }
@@ -232,16 +493,16 @@ function StepCondition({ data, onChange }) {
 
       {/* Optional: how did you hear about us */}
       <Field label="How did you hear about us?">
-        <Select value={data.referral} onValueChange={v => onChange("referral", v)}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select an option…" />
-          </SelectTrigger>
-          <SelectContent>
-            {["Google search","Google Maps","Friend or family","Social media","Doctor referral","Other"].map(o => (
-              <SelectItem key={o} value={o}>{o}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <select
+          value={data.referral}
+          onChange={e => onChange("referral", e.target.value)}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring text-[#1a2e3b]"
+        >
+          <option value="" disabled>Select an option…</option>
+          {["Google search","Google Maps","Friend or family","Social media","Doctor referral","Other"].map(o => (
+            <option key={o} value={o}>{o}</option>
+          ))}
+        </select>
       </Field>
     </div>
   );
@@ -254,9 +515,10 @@ function StepReview({ data, onEdit }) {
     { label: "Email",        value: data.email,    step: 0 },
     { label: "Phone",        value: data.phone || "—", step: 0 },
     { label: "Suburb",       value: data.suburb || "—", step: 0 },
-    { label: "Service",      value: data.service,  step: 1 },
+    { label: "Service",      value: data.service ? (SERVICES.find(s => s.id === data.service)?.name ?? data.service) : "—", step: 1 },
     { label: "Preferred date", value: data.date || "Flexible", step: 1 },
-    { label: "Time of day",  value: data.timeSlot ? TIME_SLOTS.find(t => t.value === data.timeSlot)?.label : "—", step: 1 },
+    { label: "Time of day",    value: data.timeSlot ? TIME_PERIODS.find(p => p.value === data.timeSlot)?.label ?? "—" : "—", step: 1 },
+    { label: "Preferred slot", value: data.preferredTime || "—", step: 1 },
     { label: "Details",      value: data.details || "—", step: 2 },
     { label: "Referral",     value: data.referral || "—", step: 2 },
   ];
@@ -297,7 +559,7 @@ function StepReview({ data, onEdit }) {
 }
 
 // ── Main component ──────────────────────────────────────────────────────────
-const EMPTY = { name: "", email: "", phone: "", suburb: "", service: "", date: "", timeSlot: "", details: "", referral: "" };
+const EMPTY = { name: "", email: "", phone: "", suburb: "", service: "", date: "", timeSlot: "", preferredTime: "", details: "", referral: "" };
 
 export default function Booking() {
   const [step,   setStep]   = useState(0);
@@ -323,8 +585,7 @@ export default function Booking() {
     setStep(s => s - 1);
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit() {
     setStatus("submitting");
 
     const { error } = await supabase.from("bookings").insert({
@@ -332,9 +593,9 @@ export default function Booking() {
       email:          data.email,
       phone:          data.phone     || null,
       suburb:         data.suburb    || null,
-      service:        data.service   || null,
+      service:        data.service ? (SERVICES.find(s => s.id === data.service)?.name ?? data.service) : null,
       preferred_date: data.date      || null,
-      preferred_time: data.timeSlot  || null,
+      preferred_time: data.timeSlot ? `${data.timeSlot}${data.preferredTime ? ` – ${data.preferredTime}` : ""}` : null,
       details:        data.details   || null,
       referral:       data.referral  || null,
     });
@@ -377,8 +638,7 @@ export default function Booking() {
               </CardContent>
             </Card>
           ) : (
-            <Card>
-              <div className="h-1 bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] rounded-t-xl" />
+            <Card className="border-t-4 border-t-[#0c8aa4] overflow-hidden">
               <CardContent className="pt-6 pb-6">
 
                 {/* Step indicator + progress */}
@@ -388,7 +648,7 @@ export default function Booking() {
                 </div>
 
                 {/* Step content */}
-                <form onSubmit={handleSubmit} noValidate>
+                <form noValidate>
                   <div className="min-h-[300px]">
                     {step === 0 && <StepContact     data={data} onChange={handleChange} errors={errors} />}
                     {step === 1 && <StepAppointment data={data} onChange={handleChange} errors={errors} />}
@@ -416,7 +676,7 @@ export default function Booking() {
                         Continue →
                       </button>
                     ) : (
-                      <button type="submit" disabled={status === "submitting"} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white font-bold text-sm hover:opacity-90 hover:shadow-md transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
+                      <button type="button" onClick={handleSubmit} disabled={status === "submitting"} className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] text-white font-bold text-sm hover:opacity-90 hover:shadow-md transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed">
                         {status === "submitting" ? "Submitting…" : "Submit booking →"}
                       </button>
                     )}
