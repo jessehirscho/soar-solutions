@@ -600,6 +600,7 @@ export default function Booking() {
       referral:       data.referral  || null,
     });
 
+    if (error) console.error("Supabase insert error:", error);
     setStatus(error ? "error" : "success");
   }
 
