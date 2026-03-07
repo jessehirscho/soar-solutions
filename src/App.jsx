@@ -11,7 +11,7 @@ export default function App() {
     <BrowserRouter>
       <Navbar />
       {/* pt-16 offsets fixed navbar height */}
-      <div className="pt-16 min-h-screen flex flex-col">
+      <div className="pt-20 min-h-screen flex flex-col">
         <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />

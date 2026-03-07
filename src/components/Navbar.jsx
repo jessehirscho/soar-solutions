@@ -29,19 +29,11 @@ export default function Navbar() {
         scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-white/90 backdrop-blur-sm"
       }`}
     >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
 
-        {/* Logo / Brand — [LOGO_HERE] */}
-        <Link to="/" onClick={close} className="flex items-center gap-2 no-underline">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0c8aa4] to-[#38bcd4] flex items-center justify-center flex-shrink-0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-            </svg>
-          </div>
-          <span className="font-extrabold text-[#1a2e3b] text-sm leading-tight">
-            Soar Solutions<br />
-            <span className="font-normal text-[#0c8aa4] text-xs tracking-wide">Physiotherapy</span>
-          </span>
+        {/* Logo */}
+        <Link to="/" onClick={close} className="no-underline">
+          <img src="/images/logo.png" alt="Soar Solutions Physiotherapy" className="h-16 w-auto" />
         </Link>
 
         {/* Desktop nav */}
