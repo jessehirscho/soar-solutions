@@ -203,19 +203,26 @@ function ServicePicker({ value, onChange, error }) {
         const open     = expanded === svc.id;
         return (
           <div key={svc.id} className={`${i > 0 ? "border-t border-gray-100" : ""}`}>
-            <div className={`flex items-center gap-3 px-4 py-3.5 transition-colors ${selected ? "bg-[#f0f9fc]" : "bg-white hover:bg-gray-50"}`}>
+            <div className={`flex items-center gap-2 px-3 sm:px-4 py-3 sm:py-3.5 transition-colors ${selected ? "bg-[#f0f9fc]" : "bg-white hover:bg-gray-50"}`}>
               {/* Name */}
               <div className="flex-1 min-w-0">
                 <p className={`text-sm font-semibold leading-snug ${selected ? "text-[#0c8aa4]" : "text-[#1a2e3b]"}`}>
                   {svc.name}
                 </p>
+                <div className="flex items-center gap-2 mt-0.5 sm:hidden">
+                  <span className="text-xs font-bold text-[#1a2e3b] tabular-nums">{svc.price}</span>
+                  <span className="text-xs text-[#4a6070]">{svc.duration}</span>
+                </div>
               </div>
 
-              {/* Meta */}
-              <div className="flex items-center gap-3 shrink-0">
+              {/* Meta — hidden on xs, shown sm+ */}
+              <div className="hidden sm:flex items-center gap-3 shrink-0">
                 <span className="text-sm font-bold text-[#1a2e3b] tabular-nums">{svc.price}</span>
                 <span className="text-xs text-[#4a6070] bg-gray-100 px-2 py-0.5 rounded-full whitespace-nowrap">{svc.duration}</span>
+              </div>
 
+              {/* Info + Select */}
+              <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                 {/* More info toggle */}
                 <button
                   type="button"
@@ -236,13 +243,13 @@ function ServicePicker({ value, onChange, error }) {
                 <button
                   type="button"
                   onClick={() => onChange("service", selected ? "" : svc.id)}
-                  className={`flex items-center gap-1 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`flex items-center gap-1 px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${
                     selected
                       ? "bg-[#0c8aa4] text-white shadow-sm"
                       : "bg-[#0c8aa4]/10 text-[#0c8aa4] hover:bg-[#0c8aa4] hover:text-white"
                   }`}
                 >
-                  {selected ? "✓ Selected" : "Select"}
+                  {selected ? "✓" : "Select"}
                   {!selected && (
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -443,7 +450,7 @@ function StepAppointment({ data, onChange, errors }) {
       {/* Step 2 of time: pick specific 30-min slot */}
       {data.timeSlot && (
         <Field label="Preferred start time" required error={errors.preferredTime}>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
             {TIME_PERIODS.find(p => p.value === data.timeSlot)?.slots.map(slot => (
               <button
                 key={slot}
@@ -618,7 +625,7 @@ export default function Booking() {
       </section>
 
       <section className="section">
-        <div className="max-w-2xl mx-auto mt-[-48px] relative z-10">
+        <div className="max-w-2xl mx-auto sm:mt-[-48px] relative z-10">
 
           {status === "success" ? (
             /* ── Success screen ── */

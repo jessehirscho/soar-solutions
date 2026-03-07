@@ -104,24 +104,24 @@ export default function Home() {
       {/* ─── 1. HERO ──────────────────────────────────────────────────────── */}
       <section className="page-hero">
         <div className="page-hero__inner">
-          <div className="flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
 
             {/* Copy */}
-            <div className="flex-1 max-w-xl">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="flex-1 max-w-xl w-full">
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
                 <span className="text-xs font-bold uppercase tracking-widest text-white/70">Sydney's Eastern Suburbs</span>
                 <span className="w-1 h-1 rounded-full bg-white/40 flex-shrink-0" />
                 <span className="text-xs font-bold uppercase tracking-widest text-white/70">Mobile Physiotherapy</span>
               </div>
-              <h1 className="text-white text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
+              <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight mb-4">
                 Expert physio care,<br />delivered to your door.
               </h1>
-              <p className="text-white/80 text-lg leading-relaxed mb-6">
+              <p className="text-white/80 text-base sm:text-lg leading-relaxed mb-6">
                 Whether you're recovering from injury, managing pain, or preparing to return to sport — Soar Solutions brings professional physiotherapy to you, 7 days a week.
               </p>
 
               {/* Trust signals — checklist style */}
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 mb-8 mt-8">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 mb-8 mt-6">
                 {TRUST_BADGES.map(b => (
                   <div key={b} className="flex items-center gap-2">
                     <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
@@ -134,11 +134,11 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Link to="/booking" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link to="/booking" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
                   Request an appointment →
                 </Link>
-                <a href="tel:0410676862" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
+                <a href="tel:0410676862" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   Call us now
                 </a>
@@ -146,11 +146,11 @@ export default function Home() {
             </div>
 
             {/* Hero image */}
-            <div className="flex-shrink-0 w-full max-w-sm lg:max-w-md">
+            <div className="flex-shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md">
               <img
                 src="/images/seth-assessment.jpg"
                 alt="Seth Hirschowitz — physiotherapy treatment"
-                className="w-full rounded-2xl shadow-2xl object-cover"
+                className="w-full rounded-2xl shadow-2xl object-cover max-h-80 sm:max-h-none"
               />
             </div>
           </div>
@@ -405,14 +405,14 @@ export default function Home() {
           </div>
 
           {/* CTA strip */}
-          <div className="mt-12 rounded-2xl bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] p-8 text-center text-white">
-            <h3 className="text-2xl font-extrabold mb-2">Ready to feel better?</h3>
-            <p className="text-white/80 mb-6">No referral needed. Same-week appointments available across Sydney's Eastern Suburbs.</p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Link to="/booking" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
+          <div className="mt-12 rounded-2xl bg-gradient-to-r from-[#0c8aa4] to-[#38bcd4] p-6 sm:p-8 text-center text-white">
+            <h3 className="text-xl sm:text-2xl font-extrabold mb-2">Ready to feel better?</h3>
+            <p className="text-white/80 mb-6 text-sm sm:text-base">No referral needed. Same-week appointments available across Sydney's Eastern Suburbs.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/booking" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#0c8aa4] font-bold text-sm hover:bg-white/90 hover:shadow-lg transition-all no-underline shadow-md">
                 Request appointment →
               </Link>
-              <a href="tel:0410676862" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
+              <a href="tel:0410676862" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full border-2 border-white/50 text-white font-semibold text-sm hover:bg-white/10 transition-colors no-underline">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                 Call us now
               </a>
